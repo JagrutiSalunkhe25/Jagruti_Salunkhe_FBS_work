@@ -1,0 +1,697 @@
+Enter password: *********
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 28
+Server version: 8.0.36 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| awsprog            |
+| db1                |
+| firstbit           |
+| information_schema |
+| mysql              |
+| new_schema         |
+| performance_schema |
++--------------------+
+7 rows in set (0.01 sec)
+
+mysql> use firstbit
+Database changed
+mysql> desc countries;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| c_id    | int         | YES  |     | NULL    |       |
+| c_name  | varchar(20) | YES  |     | NULL    |       |
+| regn_id | int         | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+3 rows in set (0.01 sec)
+
+mysql> show tables;
++--------------------+
+| Tables_in_firstbit |
++--------------------+
+| countries          |
+| job                |
++--------------------+
+2 rows in set (0.01 sec)
+
+mysql> drop table job;
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> create table job
+    -> (
+    -> job_id int, job_title varchar(20), min_salary int, max_salary int
+    -> )
+    -> ;
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> alter table job add primary key (job_id),job_title not null;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'job_title not null' at line 1
+mysql> alter table job add primary key (job_id);
+Query OK, 0 rows affected (0.11 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table job add not null(job_title);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'not null(job_title)' at line 1
+mysql> drop table job;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> create table job
+    -> (
+    -> job_id int primary key, job_title varchar(20) not null, min_salary in
+t, max_salary int check(max_salary <=25000)
+    -> );
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> desc job;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| job_id     | int         | NO   | PRI | NULL    |       |
+| job_title  | varchar(20) | NO   |     | NULL    |       |
+| min_salary | int         | YES  |     | NULL    |       |
+| max_salary | int         | YES  |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+4 rows in set (0.01 sec)
+
+mysql> create table job_histry
+    -> (
+    ->   emp_id int,
+    ->   str_date date,
+    ->   end_date date,
+    -> job_id int,
+    -> dept_id int
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> desc job_histry;
++----------+------+------+-----+---------+-------+
+| Field    | Type | Null | Key | Default | Extra |
++----------+------+------+-----+---------+-------+
+| emp_id   | int  | YES  |     | NULL    |       |
+| str_date | date | YES  |     | NULL    |       |
+| end_date | date | YES  |     | NULL    |       |
+| job_id   | int  | YES  |     | NULL    |       |
+| dept_id  | int  | YES  |     | NULL    |       |
++----------+------+------+-----+---------+-------+
+5 rows in set (0.01 sec)
+
+mysql> alter table countries
+    -> add unique(c_id);
+Query OK, 0 rows affected (0.05 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc countries;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| c_id    | int         | YES  | UNI | NULL    |       |
+| c_name  | varchar(20) | YES  |     | NULL    |       |
+| regn_id | int         | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+3 rows in set (0.01 sec)
+
+mysql> alter table job
+    -> add default(job_title,"blank");
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'default(job_title,"blank")' at line 2
+mysql> alter table job
+    -> alter column job_title set default 'blank';
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc job;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| job_id     | int         | NO   | PRI | NULL    |       |
+| job_title  | varchar(20) | NO   |     | blank   |       |
+| min_salary | int         | YES  |     | NULL    |       |
+| max_salary | int         | YES  |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+4 rows in set (0.01 sec)
+
+mysql> alter table job
+    -> alter column (job_title,min_salary,max_salary) set default ('blank',8
+000,'null');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(job_title,min_salary,max_salary) set default ('blank',8000,'null')' at line 2
+mysql> alter table job
+    -> alter column min_salary set default 8000;
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table job
+    -> alter column max_salary set default 'null';
+ERROR 1067 (42000): Invalid default value for 'max_salary'
+mysql> drop table job;
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> create table job
+    -> (job_id int primary key, job_title varchar(20) default 'blank', min_s
+alary int default 8000, max_salary int default null);
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> desc job;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| job_id     | int         | NO   | PRI | NULL    |       |
+| job_title  | varchar(20) | YES  |     | blank   |       |
+| min_salary | int         | YES  |     | 8000    |       |
+| max_salary | int         | YES  |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> create table dept
+    -> (
+    ->   dept_id decimal(4,0),
+    ->    dept_name varchar(30),
+    ->    mang_id decimal(6,0),
+    ->
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 5
+mysql> create table dept
+    -> (
+    ->   dept_id decimal(4,0),
+    ->    dept_name varchar(30),
+    ->    mang_id decimal(6,0),;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 5
+mysql> create table dept
+    -> (
+    ->   dept_id decimal(4,0) default 0,
+    ->    dept_name varchar(30),
+    ->    mang_id decimal(6,0) default 0,
+    ->   loc_id decimal(4,0),
+    ->   primary key(dept_id,mang_id));
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> desc dept;
++-----------+--------------+------+-----+---------+-------+
+| Field     | Type         | Null | Key | Default | Extra |
++-----------+--------------+------+-----+---------+-------+
+| dept_id   | decimal(4,0) | NO   | PRI | 0       |       |
+| dept_name | varchar(30)  | YES  |     | NULL    |       |
+| mang_id   | decimal(6,0) | NO   | PRI | 0       |       |
+| loc_id    | decimal(4,0) | YES  |     | NULL    |       |
++-----------+--------------+------+-----+---------+-------+
+4 rows in set (0.01 sec)
+
+mysql> create table Cemployee
+    -> (
+    ->   eid int unique,
+    ->   name varchar(20),
+    ->   mob int,
+    -> sal int ,
+    -> d_id int,
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 7
+mysql> create table Cemployee
+    -> (
+    ->   eid int unique,
+    ->   name varchar(20),
+    ->   mob int,
+    -> sal int ,
+    -> d_id decimal(4,0),
+    -> m_id decimal(6,0),
+    -> foreign key (d_id,m_id) references dept(dept_id,mang_id));
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> desc Cemployee;
++-------+--------------+------+-----+---------+-------+
+| Field | Type         | Null | Key | Default | Extra |
++-------+--------------+------+-----+---------+-------+
+| eid   | int          | YES  | UNI | NULL    |       |
+| name  | varchar(20)  | YES  |     | NULL    |       |
+| mob   | int          | YES  |     | NULL    |       |
+| sal   | int          | YES  |     | NULL    |       |
+| d_id  | decimal(4,0) | YES  | MUL | NULL    |       |
+| m_id  | decimal(6,0) | YES  |     | NULL    |       |
++-------+--------------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+
+mysql> clear
+mysql> clr
+    -> clr;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'clr
+clr' at line 1
+mysql> clear;
+mysql> create database library;
+Query OK, 1 row affected (0.03 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| awsprog            |
+| db1                |
+| firstbit           |
+| information_schema |
+| library            |
+| mysql              |
+| new_schema         |
+| performance_schema |
++--------------------+
+8 rows in set (0.02 sec)
+
+mysql> create table member
+    -> (
+    ->    Member_Id int primary key,
+    -> Member_Name varchar(30),
+    -> Member_address varchar(50),
+    -> Acc_Open_Date date,
+    -> Membership_type varchr(20) check in('life','annual','hyr','qrtly'),
+    -> Fees_paid int,
+    -> Max_Books_Allowed int,
+    -> Penalty_Amount decimal(7,2)
+    -> );
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'varchr(20) check in('life','annual','hyr','qrtly'),
+Fees_paid int,
+Max_Books_All' at line 7
+mysql> create table member
+    -> (
+    ->    Member_Id int primary key,
+    -> Member_Name varchar(30),
+    -> Member_address varchar(50),
+    -> Acc_Open_Date date,
+    -> Membership_type varchr(20) check (Membership_type in('life','annual',
+'hyr','qrtly')),
+    -> Fees_paid int,
+    -> Max_Books_Allowed int,
+    -> Penalty_Amount decimal(7,2)
+    -> );
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'varchr(20) check (Membership_type in('life','annual','hyr','qrtly')),
+Fees_paid ' at line 7
+mysql> CREATE TABLE member
+    -> (
+    ->    Member_Id INT PRIMARY KEY,
+    ->    Member_Name VARCHAR(30),
+    ->    Member_address VARCHAR(50),
+    ->    Acc_Open_Date DATE,
+    ->    Membership_type VARCHAR(20) CHECK (Membership_type IN ('life','annual','hyr','qrtly')),
+    ->    Fees_paid INT,
+    ->    Max_Books_Allowed INT,
+    ->    Penalty_Amount DECIMAL(7,2)
+    -> );
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> create table books
+    -> (
+    ->  book_no int,
+    -> book_name varchar(30),
+    -> Author_name varchar(30),
+    -> cost decimal(7,2),
+    -> category char(10),
+    -> primary key(book_no)
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> create table issue
+    -> (
+    -> Lib_Issue_Id int primary key,
+    -> b_no int,
+    -> m_id int,
+    -> Issue_Date date,
+    -> Return_date date,
+    -> foreign key (b_no) references books(book_no),
+    -> foreign key (m_id) references member(Member_Id)
+    -> );
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> desc member;
++-------------------+--------------+------+-----+---------+-------+
+| Field             | Type         | Null | Key | Default | Extra |
++-------------------+--------------+------+-----+---------+-------+
+| Member_Id         | int          | NO   | PRI | NULL    |       |
+| Member_Name       | varchar(30)  | YES  |     | NULL    |       |
+| Member_address    | varchar(50)  | YES  |     | NULL    |       |
+| Acc_Open_Date     | date         | YES  |     | NULL    |       |
+| Membership_type   | varchar(20)  | YES  |     | NULL    |       |
+| Fees_paid         | int          | YES  |     | NULL    |       |
+| Max_Books_Allowed | int          | YES  |     | NULL    |       |
+| Penalty_Amount    | decimal(7,2) | YES  |     | NULL    |       |
++-------------------+--------------+------+-----+---------+-------+
+8 rows in set (0.01 sec)
+
+mysql> desc books;
++-------------+--------------+------+-----+---------+-------+
+| Field       | Type         | Null | Key | Default | Extra |
++-------------+--------------+------+-----+---------+-------+
+| book_no     | int          | NO   | PRI | NULL    |       |
+| book_name   | varchar(30)  | YES  |     | NULL    |       |
+| Author_name | varchar(30)  | YES  |     | NULL    |       |
+| cost        | decimal(7,2) | YES  |     | NULL    |       |
+| category    | char(10)     | YES  |     | NULL    |       |
++-------------+--------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> desc issue;
++--------------+------+------+-----+---------+-------+
+| Field        | Type | Null | Key | Default | Extra |
++--------------+------+------+-----+---------+-------+
+| Lib_Issue_Id | int  | NO   | PRI | NULL    |       |
+| b_no         | int  | YES  | MUL | NULL    |       |
+| m_id         | int  | YES  | MUL | NULL    |       |
+| Issue_Date   | date | YES  |     | NULL    |       |
+| Return_date  | date | YES  |     | NULL    |       |
++--------------+------+------+-----+---------+-------+
+5 rows in set (0.01 sec)
+
+mysql> alter table member
+    -> modify Member_Name varchar(40);
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc member;
++-------------------+--------------+------+-----+---------+-------+
+| Field             | Type         | Null | Key | Default | Extra |
++-------------------+--------------+------+-----+---------+-------+
+| Member_Id         | int          | NO   | PRI | NULL    |       |
+| Member_Name       | varchar(40)  | YES  |     | NULL    |       |
+| Member_address    | varchar(50)  | YES  |     | NULL    |       |
+| Acc_Open_Date     | date         | YES  |     | NULL    |       |
+| Membership_type   | varchar(20)  | YES  |     | NULL    |       |
+| Fees_paid         | int          | YES  |     | NULL    |       |
+| Max_Books_Allowed | int          | YES  |     | NULL    |       |
+| Penalty_Amount    | decimal(7,2) | YES  |     | NULL    |       |
++-------------------+--------------+------+-----+---------+-------+
+8 rows in set (0.00 sec)
+
+mysql> alter table issue
+    -> add column reference char(30);
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc issue;
++--------------+----------+------+-----+---------+-------+
+| Field        | Type     | Null | Key | Default | Extra |
++--------------+----------+------+-----+---------+-------+
+| Lib_Issue_Id | int      | NO   | PRI | NULL    |       |
+| b_no         | int      | YES  | MUL | NULL    |       |
+| m_id         | int      | YES  | MUL | NULL    |       |
+| Issue_Date   | date     | YES  |     | NULL    |       |
+| Return_date  | date     | YES  |     | NULL    |       |
+| reference    | char(30) | YES  |     | NULL    |       |
++--------------+----------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+
+mysql> alter table issue
+    -> drop column reference;
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc issue;
++--------------+------+------+-----+---------+-------+
+| Field        | Type | Null | Key | Default | Extra |
++--------------+------+------+-----+---------+-------+
+| Lib_Issue_Id | int  | NO   | PRI | NULL    |       |
+| b_no         | int  | YES  | MUL | NULL    |       |
+| m_id         | int  | YES  | MUL | NULL    |       |
+| Issue_Date   | date | YES  |     | NULL    |       |
+| Return_date  | date | YES  |     | NULL    |       |
++--------------+------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> rename table issue to lib_issue;
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> desc lib_issue;
++--------------+------+------+-----+---------+-------+
+| Field        | Type | Null | Key | Default | Extra |
++--------------+------+------+-----+---------+-------+
+| Lib_Issue_Id | int  | NO   | PRI | NULL    |       |
+| b_no         | int  | YES  | MUL | NULL    |       |
+| m_id         | int  | YES  | MUL | NULL    |       |
+| Issue_Date   | date | YES  |     | NULL    |       |
+| Return_date  | date | YES  |     | NULL    |       |
++--------------+------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> insert into member values("richa sharma","pune",10-12-05,"life",25000
+,5,50);
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql> insert into member values(1,"richa sharma","pune",10-12-05,"life",250
+00,5,50);
+ERROR 1292 (22007): Incorrect date value: '-7' for column 'Acc_Open_Date' at row 1
+mysql> insert into member values(1,"richa sharma","pune",2005-05-23,"life",2
+5000,5,50);
+ERROR 1292 (22007): Incorrect date value: '1977' for column 'Acc_Open_Date' at row 1
+mysql> insert into member values(1,"richa sharma","pune",'2005-05-23',"life"
+,25000,5,50);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into member values(2,"garima sen","pune",'current date',"annual",1000,3,'null');
+ERROR 1292 (22007): Incorrect date value: 'current date' for column 'Acc_Open_Date' at row 1
+mysql> insert into member values(2,"garima sen","pune",curdate(),"annual",10
+00,3,'null');
+ERROR 1366 (HY000): Incorrect decimal value: 'null' for column 'Penalty_Amount' at row 1
+mysql> insert into member values(2,"garima sen","pune",curdate(),"annual",1000,3,null);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from member;
++-----------+--------------+----------------+---------------+-----------------+-----------+-------------------+----------------+
+| Member_Id | Member_Name  | Member_address | Acc_Open_Date | Membership_type | Fees_paid | Max_Books_Allowed | Penalty_Amount |
++-----------+--------------+----------------+---------------+-----------------+-----------+-------------------+----------------+
+|         1 | richa sharma | pune           | 2005-05-23    | life
+  |     25000 |                 5 |          50.00 |
+|         2 | garima sen   | pune           | 2025-08-20    | annual          |      1000 |                 3 |           NULL |
++-----------+--------------+----------------+---------------+-----------------+-----------+-------------------+----------------+
+2 rows in set (0.01 sec)
+
+mysql>
+
+
+
+
+       alter table member
+    -> modify Member_name varchar(20);
+Query OK, 2 rows affected (0.12 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> desc member;
++-------------------+--------------+------+-----+---------+-------+
+| Field             | Type         | Null | Key | Default | Extra |
++-------------------+--------------+------+-----+---------+-------+
+| Member_Id         | int          | NO   | PRI | NULL    |       |
+| Member_name       | varchar(20)  | YES  |     | NULL    |       |
+| Member_address    | varchar(50)  | YES  |     | NULL    |       |
+| Acc_Open_Date     | date         | YES  |     | NULL    |       |
+| Membership_type   | varchar(20)  | YES  |     | NULL    |       |
+| Fees_paid         | int          | YES  |     | NULL    |       |
+| Max_Books_Allowed | int          | YES  |     | NULL    |       |
+| Penalty_Amount    | decimal(7,2) | YES  |     | NULL    |       |
++-------------------+--------------+------+-----+---------+-------+
+8 rows in set (0.00 sec)
+
+mysql> insert into Max_Books_Allowed values 110;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '110' at line 1
+mysql> create table Member101(select * from member);
+Query OK, 2 rows affected (0.04 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> alter table member101
+    -> add constraint on max_books_allowed check (max_books_allowed < 100);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'on max_books_allowed check (max_books_allowed < 100)' at line 2
+mysql> add constraint max_books_allowed check (max_books_allowed < 100);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'add constraint max_books_allowed check (max_books_allowed < 100)' at line 1
+mysql> alter table member101
+    -> add constraint max_books_allowed check (max_books_allowed < 100);
+Query OK, 2 rows affected (0.10 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> alter table member101
+    -> add constraint max_books_allowed check (penalty_amt <= 1000);
+ERROR 3822 (HY000): Duplicate check constraint name 'max_books_allowed'.
+mysql> alter table member101
+    -> add constraint penalty_amt check (penalty_amt <= 1000);
+ERROR 1054 (42S22): Unknown column 'penalty_amt' in 'check constraint penalty_amt expression'
+mysql> alter table member101
+    -> add constraint penalty_amount check (penalty_amount <= 1000);
+Query OK, 2 rows affected (0.08 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> drop table books;
+ERROR 3730 (HY000): Cannot drop table 'books' referenced by a foreign key constraint 'lib_issue_ibfk_1' on table 'lib_issue'.
+mysql> create table books
+    ->      (
+    ->       book_no int,
+    ->      book_name varchar(30) not null,
+    ->      Author_name varchar(30),
+    ->      cost decimal(7,2),
+    ->      category char(10) check(category in('system','fiction','database','rdbms','others')),
+    ->      primary key(book_no)
+    ->      );
+ERROR 1050 (42S01): Table 'books' already exists
+mysql> insert into books values(101,'let us c','denis ritche',450,'system'),
+                                                                               -> (102,'oracle','loni',550,'database'),
+    -> (103,'mastering sql','loni',250,'database'),
+    -> (104,'pl sql','scott',750,'database'),
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 4
+mysql> insert into books values(101,'let us c','denis ritche',450,'system'),
+
+    -> (102,'oracle','loni',550,'database'),
+    -> (103,'mastering sql','loni',250,'database'),
+    -> (104,'pl sql','scott',750,'database');
+Query OK, 4 rows affected (0.01 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> select * from books;
++---------+---------------+--------------+--------+----------+
+| book_no | book_name     | Author_name  | cost   | category |
++---------+---------------+--------------+--------+----------+
+|     101 | let us c      | denis ritche | 450.00 | system   |
+|     102 | oracle        | loni         | 550.00 | database |
+|     103 | mastering sql | loni         | 250.00 | database |
+|     104 | pl sql        | scott        | 750.00 | database |
++---------+---------------+--------------+--------+----------+
+4 rows in set (0.00 sec)
+
+mysql> insert into books values(105,'national geographic','adis scott',1000,
+'science');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from books;
++---------+---------------------+--------------+---------+----------+
+| book_no | book_name           | Author_name  | cost    | category |
++---------+---------------------+--------------+---------+----------+
+|     101 | let us c            | denis ritche |  450.00 | system   |
+|     102 | oracle              | loni         |  550.00 | database |
+|     103 | mastering sql       | loni         |  250.00 | database |
+|     104 | pl sql              | scott        |  750.00 | database |
+|     105 | national geographic | adis scott   | 1000.00 | science  |
++---------+---------------------+--------------+---------+----------+
+5 rows in set (0.00 sec)
+
+mysql> alter table lib_issue
+    -> rename lib_issue to issue;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'to issue' at line 2
+mysql> rename table lib_issue to issue;
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> desc issue;
++--------------+------+------+-----+---------+-------+
+| Field        | Type | Null | Key | Default | Extra |
++--------------+------+------+-----+---------+-------+
+| Lib_Issue_Id | int  | NO   | PRI | NULL    |       |
+| b_no         | int  | YES  | MUL | NULL    |       |
+| m_id         | int  | YES  | MUL | NULL    |       |
+| Issue_Date   | date | YES  |     | NULL    |       |
+| Return_date  | date | YES  |     | NULL    |       |
++--------------+------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> insert into issue values
+    -> (7001,101,1,'2006-12-10'),
+    -> (7002,102,2,'2006-12-25'),
+    -> (7003,104,1,'2006-01-15'),
+    -> (7004,101,1,'2006-07-04'),
+    -> (7005,104,2,'2006-11-15'),
+    -> (7006,101,3,'2006-02-18');
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql> select * from member
+    ->
+    -> ;
++-----------+--------------+----------------+---------------+-----------------+-----------+-------------------+----------------+
+| Member_Id | Member_name  | Member_address | Acc_Open_Date | Membership_type | Fees_paid | Max_Books_Allowed | Penalty_Amount |
++-----------+--------------+----------------+---------------+-----------------+-----------+-------------------+----------------+
+|         1 | richa sharma | pune           | 2005-05-23    | life
+  |     25000 |                 5 |          50.00 |
+|         2 | garima sen   | pune           | 2025-08-20    | annual          |      1000 |                 3 |           NULL |
++-----------+--------------+----------------+---------------+-----------------+-----------+-------------------+----------------+
+2 rows in set (0.01 sec)
+
+mysql> delete table member where member_id=1;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'table member where member_id=1' at line 1
+mysql> delete table member where Member_Id=1;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'table member where Member_Id=1' at line 1
+mysql> insert into issue values
+    -> (7001,101,1,'2006-12-10'),
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 2
+mysql> insert into issue values
+    -> (7001,101,1,'2006-12-10',null),
+    -> (7002,102,2,'2006-12-25',null),
+    -> (7003,104,1,'2006-01-15',null),
+    -> (7004,101,1,'2006-07-04',null),
+    -> (7005,104,2,'2006-11-15',null),
+    -> (7006,101,3,'2006-02-18',null);
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`firstbit`.`issue`, CONSTRAINT `issue_ibfk_2` FOREIGN KEY (`m_id`) REFERENCES `member` (`Member_Id`))
+mysql> desc issue;
++--------------+------+------+-----+---------+-------+
+| Field        | Type | Null | Key | Default | Extra |
++--------------+------+------+-----+---------+-------+
+| Lib_Issue_Id | int  | NO   | PRI | NULL    |       |
+| b_no         | int  | YES  | MUL | NULL    |       |
+| m_id         | int  | YES  | MUL | NULL    |       |
+| Issue_Date   | date | YES  |     | NULL    |       |
+| Return_date  | date | YES  |     | NULL    |       |
++--------------+------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> select * from issue;
+Empty set (0.00 sec)
+
+mysql> select * from member;
++-----------+--------------+----------------+---------------+-----------------+-----------+-------------------+----------------+
+| Member_Id | Member_name  | Member_address | Acc_Open_Date | Membership_type | Fees_paid | Max_Books_Allowed | Penalty_Amount |
++-----------+--------------+----------------+---------------+-----------------+-----------+-------------------+----------------+
+|         1 | richa sharma | pune           | 2005-05-23    | life            |     25000 |                 5 |          50.00 |
+|         2 | garima sen   | pune           | 2025-08-20    | annual          |      1000 |                 3 |           NULL |
++-----------+--------------+----------------+---------------+-----------------+-----------+-------------------+----------------+
+2 rows in set (0.00 sec)
+
+mysql> insert into issue values
+    ->     -> (7001,101,1,'2006-12-10',null),
+    ->     -> (7002,102,2,'2006-12-25',null),
+    ->     -> (7003,104,1,'2006-01-15',null),
+    ->     -> (7004,101,1,'2006-07-04',null),
+    ->     -> (7005,104,2,'2006-11-15',null),
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '-> (7001,101,1,'2006-12-10',null),
+    -> (7002,102,2,'2006-12-25',null),
+    ->' at line 2
+mysql> (7006,101,3,'2006-02-18');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '7006,101,3,'2006-02-18')' at line 1
+mysql> insert into issue values
+    ->      (7001,101,1,'2006-12-10',null),
+    ->      (7002,102,2,'2006-12-25',null),
+    ->      (7003,104,1,'2006-01-15',null),
+    ->      (7004,101,1,'2006-07-04',null),
+    ->      (7005,104,2,'2006-11-15',null);
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> select * from books;
++---------+---------------------+--------------+---------+----------+
+| book_no | book_name           | Author_name  | cost    | category |
++---------+---------------------+--------------+---------+----------+
+|     101 | let us c            | denis ritche |  450.00 | system   |
+|     102 | oracle              | loni         |  550.00 | database |
+|     103 | mastering sql       | loni         |  250.00 | database |
+|     104 | pl sql              | scott        |  750.00 | database |
+|     105 | national geographic | adis scott   | 1000.00 | science  |
++---------+---------------------+--------------+---------+----------+
+5 rows in set (0.00 sec)
+
+mysql> delete table books
+    -> where category not in ('rdbms','database');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'table books
+
+where category not in ('rdbms','database')' at line 1
+mysql> delete from books
+    -> where category not in ('rdbms','database');
+ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`firstbit`.`issue`, CONSTRAINT `issue_ibfk_1` FOREIGN KEY (`b_no`) REFERENCES `books` (`book_no`))
+mysql> DELETE FROM books
+    -> WHERE category NOT IN ('rdbms', 'database');
+ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`firstbit`.`issue`, CONSTRAINT `issue_ibfk_1` FOREIGN KEY (`b_no`) REFERENCES `books` (`book_no`))
+mysql>

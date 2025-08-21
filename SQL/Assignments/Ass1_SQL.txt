@@ -1,0 +1,181 @@
+1) Login to MySQL and view all databases already present. You should get
+following result :
+ show databases;
++--------------------+
+| Database           |
++--------------------+
+| awsprog            |
+| db1                |
+| firstbit           |
+| information_schema |
+| mysql              |
+| new_schema         |
+| performance_schema |
++--------------------+
+
+2)Write an SQL statement to create a simple table countries including columns
+country_id,country_name and region_id. After this display the structure of
+table as below :
+
+create table countries
+(
+  c_id int,c_name varchar(20),regn_id int
+);
+
+
+ desc countries;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| c_id    | int         | YES  |     | NULL    |       |
+| c_name  | varchar(20) | YES  |     | NULL    |       |
+| regn_id | int         | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+
+3)Write an SQL statement to create a table named jobs including columns
+job_id, job_title, min_salary, max_salary and check whether the
+max_salary amount exceeding the upper limit 25000. Also set job_id as
+primary key and entering null values for job_title is not allowed.
+
+create table job
+    -> (
+    -> job_id int primary key, job_title varchar(20) not null, min_salary   int, max_salary int check(max_salary <=25000)
+    -> );
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> desc job;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| job_id     | int         | NO   | PRI | NULL    |       |
+| job_title  | varchar(20) | NO   |     | NULL    |       |
+| min_salary | int         | YES  |     | NULL    |       |
+| max_salary | int         | YES  |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+4 rows in set (0.01 sec)
+
+
+
+4)Write a SQL statement to create a table named job_histry including columns
+employee_id, start_date, end_date, job_id and department_id
+
+ create table job_histry
+    -> (
+    ->   emp_id int,
+    ->   str_date date,
+    ->   end_date date,
+    -> job_id int,
+    -> dept_id int
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> desc job_histry;
++----------+------+------+-----+---------+-------+
+| Field    | Type | Null | Key | Default | Extra |
++----------+------+------+-----+---------+-------+
+| emp_id   | int  | YES  |     | NULL    |       |
+| str_date | date | YES  |     | NULL    |       |
+| end_date | date | YES  |     | NULL    |       |
+| job_id   | int  | YES  |     | NULL    |       |
+| dept_id  | int  | YES  |     | NULL    |       |
++----------+------+------+-----+---------+-------+
+
+
+5)Write an SQL statement to alter a table named countries to make sure that no
+duplicate data against column country_id will be allowed at the time of
+insertion.
+
+alter table countries
+    -> add unique(c_id);
+Query OK, 0 rows affected (0.05 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc countries;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| c_id    | int         | YES  | UNI | NULL    |       |
+| c_name  | varchar(20) | YES  |     | NULL    |       |
+| regn_id | int         | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+3 rows in set (0.01 sec)
+
+
+6)Write an SQL statement to create a table named jobs including columns job_id,
+job_title, min_salary and max_salary, and make sure that, the default value
+for job_title is blank and min_salary is 8000 and max_salary is NULL will be
+entered automatically at the time of insertion if no value assigned for the
+specified columns.
+
+
+ (job_id int primary key, job_title varchar(20) default 'blank', min_s
+alary int default 8000, max_salary int default null);
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> desc job;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| job_id     | int         | NO   | PRI | NULL    |       |
+| job_title  | varchar(20) | YES  |     | blank   |       |
+| min_salary | int         | YES  |     | 8000    |       |
+| max_salary | int         | YES  |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+
+7)Create a Department table with following structure
+
+create table dept
+    -> (
+    ->   dept_id decimal(4,0) default 0,
+    ->    dept_name varchar(30),
+    ->    mang_id decimal(6,0) default 0,
+    ->   loc_id decimal(4,0),
+    ->   primary key(dept_id,mang_id));
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> desc dept;
++-----------+--------------+------+-----+---------+-------+
+| Field     | Type         | Null | Key | Default | Extra |
++-----------+--------------+------+-----+---------+-------+
+| dept_id   | decimal(4,0) | NO   | PRI | 0       |       |
+| dept_name | varchar(30)  | YES  |     | NULL    |       |
+| mang_id   | decimal(6,0) | NO   | PRI | 0       |       |
+| loc_id    | decimal(4,0) | YES  |     | NULL    |       |
++-----------+--------------+------+-----+---------+-------+
+4 rows in set (0.01 sec)
+
+8)Write an SQL statement to create a table employees including columns
+employee_id, first_name, last_name, email, phone_number hire_date, job_id,
+salary, commission, manager_id and department_id and make sure that, the
+employee_id column does not contain any duplicate value at the time of
+insertion and the foreign key columns combined by department_id and
+manager_id columns contain only those unique combination values, which
+combinations are exists in the departments table.
+
+
+ create table Cemployee
+    -> (
+    ->   eid int unique,
+    ->   name varchar(20),
+    ->   mob int,
+    -> sal int ,
+    -> d_id decimal(4,0),
+    -> m_id decimal(6,0),
+    -> foreign key (d_id,m_id) references dept(dept_id,mang_id));
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> desc Cemployee;
++-------+--------------+------+-----+---------+-------+
+| Field | Type         | Null | Key | Default | Extra |
++-------+--------------+------+-----+---------+-------+
+| eid   | int          | YES  | UNI | NULL    |       |
+| name  | varchar(20)  | YES  |     | NULL    |       |
+| mob   | int          | YES  |     | NULL    |       |
+| sal   | int          | YES  |     | NULL    |       |
+| d_id  | decimal(4,0) | YES  | MUL | NULL    |       |
+| m_id  | decimal(6,0) | YES  |     | NULL    |       |
++-------+--------------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+
