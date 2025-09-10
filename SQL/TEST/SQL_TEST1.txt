@@ -1,0 +1,60 @@
+Name : Jagruti Suresh Salunkhe
+Set : B
+
+
+Q1)     select c_name from customers order by c_name;
+
+Q2)     select p_id,p_name,price from products
+ 	order by price desc
+	limit 10;
+
+Q3)     select e_id,salary from employees
+	order by salary desc
+	limit 1;
+	offset 1;
+
+Q4)     select 	city,count(*) from customers
+	group by city;
+
+Q5)     select dept_id,sum(salary) "totalSum" from employees
+	group by dept_id
+	having sum(salary)>200000;
+
+Q6)     select substring(phone_no,7,10),substring(customerName,1,3) from customers;
+	
+
+Q7)     select * from products
+	where product_name like "%Pro%";
+
+Q8)     select course,count(*) from students
+	group by course
+	having count(*)>=30;
+
+Q9)     select count(o_id) from orders
+	group by year(purchase_date),month(purchase_date);
+
+Q10)    select dept_id,max(salary),min(salary) from employees
+	group by dept_id;
+
+Q11)    1
+
+Q12)    a
+
+Q13)    a
+
+Q14)    b
+
+Q15)    b
+
+Q16)    select c.cust_id,c.cust_name,o.total_amount 
+	from customer c inner join orders 
+	on c.cust_id=o.cust_id 
+	group by cust_id
+	having count(cust_id)>2;
+
+Q17)    select p.product_id,p.product_name,count(*) as sales_count
+	from products p inner join sales s
+	on p.product_id=s.product_id
+	group by  product_id
+	having count(*)>50;
+	
