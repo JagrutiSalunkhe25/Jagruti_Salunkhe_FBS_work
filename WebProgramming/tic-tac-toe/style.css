@@ -1,0 +1,21 @@
+.box{
+    width: 300px;
+    height: 300px;
+    border:1px solid black;
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    margin: 150px auto;
+     background-color: black;
+}
+
+.box span{
+    border:1px solid rgb(120, 117, 117);
+    color: aliceblue;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+.box span:hover {
+  background-color: #666;
+}
